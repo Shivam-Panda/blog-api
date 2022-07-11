@@ -1,7 +1,8 @@
+import json
 import sqlite3 as sql
 from sqlite3 import Error
 
-from flask import Flask
+from flask import Flask, request
 
 # Init Functions
 
@@ -193,6 +194,18 @@ def hard_reset():
     reset(conn)
     return True
 
+@app.route('/makePost', methods=['POST'])
+def createPost():
+    data = json.loads(request.data)
+    conn = createConnection('database.db')
+    return makePost(conn, data['title'], data['author'], data['time'], data['body'])
+
+@app.route('/makeComment', methods=['POST'])
+def createComment():
+    data = json.loads(request.data)
+    conn = createConnection('database.db')
+    return makeComment(conn, data['author'], data['body'], data['time'], data['postId'])
+    
 # if __name__ == '__main__':
 #     conn = createConnection('database.db')
 #     reset(conn)
