@@ -203,7 +203,7 @@ def createPost():
 def createComment():
     data = json.loads(request.data)
     conn = createConnection()
-    return str(makeComment(conn, data['author'], data['body'], data['time'], data['postId']))
+    return str(makeComment(conn, data['author'], data['body'], data['time'], int(data['postId'])))
     
 # if __name__ == '__main__':
 #     conn = createConnection('database.db')
