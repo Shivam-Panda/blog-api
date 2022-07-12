@@ -168,42 +168,42 @@ def hello_world():
 def allPosts():
     conn = createConnection()
     posts = getAllPosts(conn)
-    return posts
+    return json.loads(posts)
 
 @app.route('/likePost/<id>')
 def putLikePost(id):
     conn = createConnection()
-    return likePost(conn, id)
+    return str(likePost(conn, id))
 
 @app.route('/getComments/<postId>')
 def getComments(postId):
     conn = createConnection()
     comments = getAllComments(conn, postId)
-    return comments
+    return json.loads(comments)
 
 @app.route('/getPosts/<author>')
 def getAuthorPosts(author):
     conn = createConnection()
     posts = authorPosts(conn, author)
-    return posts
+    return json.loads(posts)
 
 @app.route('/reset')
 def hard_reset():
     conn = createConnection()
     reset(conn)
-    return True
+    return "true"
 
 @app.route('/makePost', methods=['POST'])
 def createPost():
     data = json.loads(request.data)
     conn = createConnection()
-    return makePost(conn, data['title'], data['author'], data['time'], data['body'])
+    return str(makePost(conn, data['title'], data['author'], data['time'], data['body']))
 
 @app.route('/makeComment', methods=['POST'])
 def createComment():
     data = json.loads(request.data)
     conn = createConnection()
-    return makeComment(conn, data['author'], data['body'], data['time'], data['postId'])
+    return str(makeComment(conn, data['author'], data['body'], data['time'], data['postId']))
     
 # if __name__ == '__main__':
 #     conn = createConnection('database.db')
