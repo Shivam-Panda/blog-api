@@ -6,16 +6,15 @@ from flask import Flask, request
 
 # Init Functions
 
-def createConnection(db_file):
+file_name = 'data.db'
+
+def createConnection():
     conn = None
     
     try:
-        conn = sql.connect(db_file)
+        conn = sql.connect(file_name)
     except Error as e:
         print(e)
-    finally:
-        if conn:
-            conn.commit()
     
     return conn
 
@@ -27,7 +26,7 @@ def createTables(conn, sql_instructions):
         print(e)
 
 def initTables():
-    conn = createConnection('database.db')
+    conn = createConnection()
 
     sql_inst_post = '''
         CREATE TABLE IF NOT EXISTS posts (
@@ -167,43 +166,43 @@ def hello_world():
 
 @app.route('/getAllPosts')
 def allPosts():
-    conn = createConnection('database.db')
+    conn = createConnection()
     posts = getAllPosts(conn)
     return posts
 
 @app.route('/likePost/<id>')
 def putLikePost(id):
-    conn = createConnection('database.db')
+    conn = createConnection()
     return likePost(conn, id)
 
 @app.route('/getComments/<postId>')
 def getComments(postId):
-    conn = createConnection('database.db')
+    conn = createConnection()
     comments = getAllComments(conn, postId)
     return comments
 
 @app.route('/getPosts/<author>')
 def getAuthorPosts(author):
-    conn = createConnection('database.db')
+    conn = createConnection()
     posts = authorPosts(conn, author)
     return posts
 
 @app.route('/reset')
 def hard_reset():
-    conn = createConnection('database.db')
+    conn = createConnection()
     reset(conn)
     return True
 
 @app.route('/makePost', methods=['POST'])
 def createPost():
     data = json.loads(request.data)
-    conn = createConnection('database.db')
+    conn = createConnection()
     return makePost(conn, data['title'], data['author'], data['time'], data['body'])
 
 @app.route('/makeComment', methods=['POST'])
 def createComment():
     data = json.loads(request.data)
-    conn = createConnection('database.db')
+    conn = createConnection()
     return makeComment(conn, data['author'], data['body'], data['time'], data['postId'])
     
 # if __name__ == '__main__':
@@ -213,6 +212,7 @@ def createComment():
 
 # Hard Reset
 
-# if __name__ == '__main__':
-#     conn = createConnection('database.db')
-#     reset(conn)
+if __name__ == '__main__':
+    conn = createConnection()
+    initTables()
+    reset(conn)
