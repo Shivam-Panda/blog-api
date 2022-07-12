@@ -168,42 +168,46 @@ def hello_world():
 def allPosts():
     conn = createConnection()
     posts = getAllPosts(conn)
-    return jsonify(posts)
+    jsonify()
+    return jsonify({"posts": posts})
 
 @app.route('/likePost/<id>')
 def putLikePost(id):
     conn = createConnection()
-    return str(likePost(conn, id))
+    cur_likes = likePost(conn, id)
+    return jsonify({"likes": cur_likes})
 
 @app.route('/getComments/<postId>')
 def getComments(postId):
     conn = createConnection()
     comments = getAllComments(conn, postId)
-    return jsonify(comments)
+    return jsonify({"comments": comments})
 
 @app.route('/getPosts/<author>')
 def getAuthorPosts(author):
     conn = createConnection()
     posts = authorPosts(conn, author)
-    return jsonify(posts)
+    return jsonify({"posts": posts})
 
 @app.route('/reset')
 def hard_reset():
     conn = createConnection()
     reset(conn)
-    return jsonify(True)
+    return jsonify({"results": True})
 
 @app.route('/makePost', methods=['POST'])
 def createPost():
     data = json.loads(request.data)
     conn = createConnection()
-    return str(makePost(conn, data['title'], data['author'], data['time'], data['body']))
+    id = makePost(conn, data['title'], data['author'], data['time'], data['body'])
+    return jsonify({"id": id})
 
 @app.route('/makeComment', methods=['POST'])
 def createComment():
     data = json.loads(request.data)
     conn = createConnection()
-    return str(makeComment(conn, data['author'], data['body'], data['time'], int(data['postId'])))
+    id= makeComment(conn, data['author'], data['body'], data['time'], data['postId'])
+    return jsonify({"id": id})
     
 # if __name__ == '__main__':
 #     conn = createConnection('database.db')
