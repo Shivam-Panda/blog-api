@@ -168,42 +168,42 @@ def hello_world():
 def allPosts():
     conn = createConnection()
     posts = getAllPosts(conn)
-    return tuple(posts)
+    return tuple(posts, 200)
 
 @app.route('/likePost/<id>')
 def putLikePost(id):
     conn = createConnection()
-    return str(likePost(conn, id))
+    return tuple(str(likePost(conn, id)), 200)
 
 @app.route('/getComments/<postId>')
 def getComments(postId):
     conn = createConnection()
     comments = getAllComments(conn, postId)
-    return tuple(comments)
+    return tuple(comments, 200)
 
 @app.route('/getPosts/<author>')
 def getAuthorPosts(author):
     conn = createConnection()
     posts = authorPosts(conn, author)
-    return tuple(posts)
+    return tuple(posts, 200)
 
 @app.route('/reset')
 def hard_reset():
     conn = createConnection()
     reset(conn)
-    return "true"
+    return tuple("true", 200)
 
 @app.route('/makePost', methods=['POST'])
 def createPost():
     data = json.loads(request.data)
     conn = createConnection()
-    return str(makePost(conn, data['title'], data['author'], data['time'], data['body']))
+    return tuple(str(makePost(conn, data['title'], data['author'], data['time'], data['body'])), 200)
 
 @app.route('/makeComment', methods=['POST'])
 def createComment():
     data = json.loads(request.data)
     conn = createConnection()
-    return str(makeComment(conn, data['author'], data['body'], data['time'], data['postId']))
+    return tuple(str(makeComment(conn, data['author'], data['body'], data['time'], data['postId'])), 200)
     
 # if __name__ == '__main__':
 #     conn = createConnection('database.db')
@@ -212,7 +212,7 @@ def createComment():
 
 # Hard Reset
 
-if __name__ == '__main__':
-    conn = createConnection()
-    initTables()
-    reset(conn)
+# if __name__ == '__main__':
+#     conn = createConnection()
+#     initTables()
+#     reset(conn)
