@@ -168,7 +168,7 @@ def hello_world():
 def allPosts():
     conn = createConnection()
     posts = getAllPosts(conn)
-    return json.loads(posts)
+    return tuple(posts)
 
 @app.route('/likePost/<id>')
 def putLikePost(id):
@@ -179,13 +179,13 @@ def putLikePost(id):
 def getComments(postId):
     conn = createConnection()
     comments = getAllComments(conn, postId)
-    return json.loads(comments)
+    return tuple(comments)
 
 @app.route('/getPosts/<author>')
 def getAuthorPosts(author):
     conn = createConnection()
     posts = authorPosts(conn, author)
-    return json.loads(posts)
+    return tuple(posts)
 
 @app.route('/reset')
 def hard_reset():
