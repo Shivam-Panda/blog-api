@@ -2,7 +2,7 @@ import json
 import sqlite3 as sql
 from sqlite3 import Error
 
-from flask import Flask, request
+from flask import Flask, jsonify, request
 
 # Init Functions
 
@@ -168,42 +168,42 @@ def hello_world():
 def allPosts():
     conn = createConnection()
     posts = getAllPosts(conn)
-    return tuple(posts, 200)
+    return jsonify(posts)
 
 @app.route('/likePost/<id>')
 def putLikePost(id):
     conn = createConnection()
-    return tuple(str(likePost(conn, id)), 200)
+    return str(likePost(conn, id))
 
 @app.route('/getComments/<postId>')
 def getComments(postId):
     conn = createConnection()
     comments = getAllComments(conn, postId)
-    return tuple(comments, 200)
+    return jsonify(comments)
 
 @app.route('/getPosts/<author>')
 def getAuthorPosts(author):
     conn = createConnection()
     posts = authorPosts(conn, author)
-    return tuple(posts, 200)
+    return jsonify(posts)
 
 @app.route('/reset')
 def hard_reset():
     conn = createConnection()
     reset(conn)
-    return tuple("true", 200)
+    return jsonify(True)
 
 @app.route('/makePost', methods=['POST'])
 def createPost():
     data = json.loads(request.data)
     conn = createConnection()
-    return tuple(str(makePost(conn, data['title'], data['author'], data['time'], data['body'])), 200)
+    return str(makePost(conn, data['title'], data['author'], data['time'], data['body']))
 
 @app.route('/makeComment', methods=['POST'])
 def createComment():
     data = json.loads(request.data)
     conn = createConnection()
-    return tuple(str(makeComment(conn, data['author'], data['body'], data['time'], data['postId'])), 200)
+    return str(makeComment(conn, data['author'], data['body'], data['time'], data['postId']))
     
 # if __name__ == '__main__':
 #     conn = createConnection('database.db')
